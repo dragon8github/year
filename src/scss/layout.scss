@@ -1,0 +1,14 @@
+.l-field {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+    .l-field__key {
+      white-space: nowrap;
+    }
+
+    .l-field__value {
+      flex: 1;
+    }
+
