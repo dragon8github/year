@@ -10,35 +10,41 @@ export default {
     name: 'PC',
     data() {
         return {
-
+            items: [],
         }
     },
     methods: {
         isHighlight(role) {
             return role === 'boss'
         },
-        randomPos() {
-            // 获取屏幕宽高
-            const { innerWidth: w, innerHeight: h } = window
-            // 获取随机数
-            return { left: w + 200 + 'px', top: parseInt(Math.random() * h) + 'px' }
-        },
-        getRandomArrayElements(arr, count) {
-            var shuffled = arr.slice(0),
-                i = arr.length,
-                min = i - count,
-                temp, index;
-            while (i-- > min) {
-                index = Math.floor((i + 1) * Math.random());
-                temp = shuffled[index];
-                shuffled[index] = shuffled[i];
-                shuffled[i] = temp;
-            }
-            return shuffled.slice(min);
-        }
     },
     beforeMount() {
-        $('body').barrager({ 'img': avatar, 'info': 'Hello world!' });
+        const ws = new WebSocket('ws://47.107.160.191:7878')
+        ws.onopen  = e => console.log('WebSocket onopen')
+        ws.onclose = e => console.log('WebSocket onclose')
+        ws.onerror = e => console.log('WebSocket onclose')
+        ws.onmessage = e => {
+          // 获取消息列表
+          let data  = JSON.parse(e.data)
+
+          // 找出新长度
+          const len = data.length - this.items.length
+
+          // 先赋值
+          this.items = data
+
+          // 如果长度健康的话
+          if (len) {
+            // 往后取n个
+            const newList = this.items.slice(-len)
+
+            // 开始发送
+            newList.forEach(item => $('body').barrager({ 'img': avatar, 'info': item.content }))            
+          }
+
+        }
+
+        
     },
 }
 </script>
