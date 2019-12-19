@@ -5,9 +5,10 @@ Vue.use(Router)
 
 // login
 const Login = r => require.ensure([], () => r(require('@/pages/Login.vue')), 'Login')
-
 // index
 const Chat = r => require.ensure([], () => r(require('@/pages/Chat.vue')), 'Chat')
+// pc
+const PC = r => require.ensure([], () => r(require('@/pages/PC.vue')), 'PC')
 
 // 路由配置
 var router = new Router({
@@ -21,6 +22,8 @@ var router = new Router({
     { path: '/Login', name: 'Login', meta: { title: '欢迎参加年会' }, component: Login },
     // 聊天室
     { path: '/Chat', name: 'Chat', meta: { title: '创慧&纳海川年会' }, component: Chat },
+    // 聊天室
+    { path: '/PC', name: 'PC', meta: { title: '创慧&纳海川年会' }, component: PC },
   ]
 })
 

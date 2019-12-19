@@ -1,0 +1,145 @@
+<template>
+    <div class="PC">
+        <!-- <div class='chat'>
+            <div class="chat__item u-flex-sc" v-for='(item, index) in msgs' :key='index' :style="{ left: item.left, top: item.top }">
+                <div class='chat__item--avatar' :class='{ "is-boss": isHighlight(item.role) }'><img class='chat__item--img' :src="item.avatar"></div>
+                <div class='chat__item--content u-flex-sc'>
+                    <div class="chat__item--name">{{ item.name }}：</div>
+                    <div class="chat__item--text" :class='{ "is-highlight": isHighlight(item.role) }'>{{ item.text }}</span>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+</template>
+<script>
+// 示例微信头像
+const avatar = require('@/assets/wx.jpg')
+
+export default {
+    name: 'PC',
+    data() {
+        return {
+            msgs: [],
+            items: [
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝福公司繁荣昌盛', role: 'employee', pendant: 1 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝愿公司越来越好，生意兴隆', role: 'employee', pendant: 2 },
+                { left: 0, top: 0, avatar: avatar, name: '陈总', text: '公司明年必定会进入一个更加辉煌的时代', role: 'boss', pendant: 3 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 5 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 6 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 7 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 8 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝福公司繁荣昌盛', role: 'employee', pendant: 1 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝愿公司越来越好，生意兴隆', role: 'employee', pendant: 2 },
+                { left: 0, top: 0, avatar: avatar, name: '陈总', text: '公司明年必定会进入一个更加辉煌的时代', role: 'boss', pendant: 3 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 5 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 6 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 7 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 8 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝福公司繁荣昌盛', role: 'employee', pendant: 1 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '祝愿公司越来越好，生意兴隆', role: 'employee', pendant: 2 },
+                { left: 0, top: 0, avatar: avatar, name: '陈总', text: '公司明年必定会进入一个更加辉煌的时代', role: 'boss', pendant: 3 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 5 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 6 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '希望明年能告别单身', role: 'employee', pendant: 7 },
+                { left: 0, top: 0, avatar: avatar, name: '李钊鸿', text: '今天希望能抽中一等奖', role: 'employee', pendant: 8 },
+            ],
+        }
+    },
+    methods: {
+        isHighlight(role) {
+            return role === 'boss'
+        },
+        randomPos() {
+            // 获取屏幕宽高
+            const { innerWidth: w, innerHeight: h } = window
+            // 获取随机数
+            return { left: w + 200 + 'px', top: parseInt(Math.random() * h) + 'px' }
+        },
+        getRandomArrayElements(arr, count) {
+            var shuffled = arr.slice(0), i = arr.length, min = i - count, temp, index;
+            while (i-- > min) {
+                index = Math.floor((i + 1) * Math.random());
+                temp = shuffled[index];
+                shuffled[index] = shuffled[i];
+                shuffled[i] = temp;
+            }
+            return shuffled.slice(min);
+        }
+    },
+    components: {
+
+    },
+    computed: {
+
+    },
+    watch: {
+
+    },
+    beforeMount() {
+        setInterval(() => {
+            $('body').barrager({'img':'barrager.png','info':'Hello world!'});
+        }, 1000);
+    },
+}
+</script>
+<style lang="scss" scoped>
+.PC {
+    @include bg(100%, 100%, '~@/assets/main.png')
+}
+
+
+.chat {
+    width: 100%;
+    height: 100%;
+}
+
+.chat__item {
+    position: absolute;
+
+    background-color: rgba(0, 0, 0, .3);
+    border-radius: 7px;
+}
+
+.chat__item--avatar {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.14);
+    border-style: solid;
+    border-width: 3px;
+
+    border-image-source: linear-gradient(103deg, rgba(255, 68, 69, 1) 0%, rgba(211, 151, 254, 1) 100%);
+    border-image-slice: 1;
+
+    &.is-boss::after {
+        content: '';
+        position: absolute;
+        left: -20px;
+        top: -16px;
+        @include bg(75px, 75px, '~@/assets/w1.png');
+    }
+
+    .chat__item--img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.chat__item--content {
+    height: 44px;
+    font-size: 22px;
+    color: rgba(255, 255, 255, 1);
+    padding: 10px;
+
+}
+
+.chat__item--name {}
+
+.chat__item--text {}
+
+.is-highlight {
+    background: linear-gradient(to right, rgb(73, 200, 149), rgb(38, 198, 218));
+    color: white;
+}
+</style>
