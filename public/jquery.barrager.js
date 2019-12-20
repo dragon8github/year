@@ -63,7 +63,7 @@
         // fixbug
         div_barrager.css("right", -div_barrager.width() + "px");
 
-        $(id).animate({ right: this_width }, barrage.speed * 1000, function() {
+        $(id).animate({ right: this_width }, barrage.speed * 1000, 'linear', function() {
             $(id).remove();
         });
 
@@ -72,7 +72,7 @@
         });
 
         div_barrager_box.mouseout(function() {
-            $(id).animate({ right: this_width }, barrage.speed * 1000, function() {
+            $(id).animate({ right: this_width }, barrage.speed * 1000, 'linear', function() {
                 $(id).remove();
             });
         });

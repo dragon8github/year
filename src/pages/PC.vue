@@ -120,15 +120,13 @@ export default {
 }
 
 .barrage_box .close {
+    width: 15px;
+    height: 15px;
+    background: rgba(255, 255, 255, .1) url('~@/assets/close.png') center center / 100% 100%  no-repeat content-box;
     visibility: hidden;
     opacity: 0;
     text-align: center;
-    width: 25px;
-    height: 25px;
-    margin-left: 20px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, .1);
-    background-image: url('~@/assets/close.png');
 }
 
 .barrage_box:hover .close {
