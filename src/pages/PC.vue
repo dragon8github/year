@@ -38,19 +38,22 @@ export default {
             // 往后取n个
             const newList = this.items.slice(-len)
 
+            // 获取当前时间
+            const now = Date.now()
+
+            // 只取最近一分钟之内的。
+            const _newList = newList.filter(_ => now - new Date(_.createTime) <= 600 * 1000)
+
             // 开始发送
-            newList.forEach(item => $('body').barrager({ 'img': avatar, 'info': item.content }))            
+            _newList.forEach(item => $('body').barrager({ space: 10, 'img': avatar, 'info': item.content }))            
           }
-
         }
-
-        
     },
 }
 </script>
 <style lang="scss" scoped>
 .PC {
-    @include bg(100%, 100%, '~@/assets/main.png')
+    background: transparent url('~@/assets/main.png') center center / 100% 100%  no-repeat content-box;
 }
 
 .is-highlight {
@@ -68,10 +71,13 @@ export default {
 }
 
 .barrage_box {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
     background-color: rgba(0, 0, 0, .3);
     padding-right: 8px;
     height: 44px;
-    display: inline-block;
     transition: all .3s;
 
     border-top-right-radius: 7px;
@@ -106,7 +112,7 @@ export default {
     font-size: 22px;
     color: #fff;
     line-height: 44px;
-    margin-left: 18px;
+    margin-left: 10px;
 }
 
 .barrage_box div.p a:hover {
@@ -122,7 +128,6 @@ export default {
     margin-left: 20px;
     border-radius: 50%;
     background: rgba(255, 255, 255, .1);
-    margin-top: 8px;
     background-image: url('~@/assets/close.png');
 }
 
