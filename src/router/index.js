@@ -3,8 +3,6 @@ import Router from 'vue-router'
 import store from '../store'
 Vue.use(Router)
 
-// login
-const Login = r => require.ensure([], () => r(require('@/pages/Login.vue')), 'Login')
 // index
 const Chat = r => require.ensure([], () => r(require('@/pages/Chat.vue')), 'Chat')
 // pc
@@ -17,9 +15,7 @@ var router = new Router({
   // 路由导航
   routes: [
     // 首页 > 重定向 > 工作室
-    { path: '/', redirect: '/Login' },
-    // 登录页
-    { path: '/Login', name: 'Login', meta: { title: '欢迎参加年会' }, component: Login },
+    { path: '/', redirect: '/PC' },
     // 聊天室
     { path: '/Chat', name: 'Chat', meta: { title: '创慧&纳海川年会' }, component: Chat },
     // 聊天室

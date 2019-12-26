@@ -3,7 +3,7 @@
         <div class='Chat__main' @click='clickOutside'>
             <div class='Chat__items'>
                 <div class='Chat__item' v-for='(item, index) in items' :key='index'>
-                    <div class='Chat__item--avatar' :class='{ "is-boss": isHighlight(item.role) }'><img class='Chat__item--img' :src='item.avatar'></div>
+                    <div class='Chat__item--avatar' :class='{ "is-boss": isHighlight(item.role) }'><img class='Chat__item--img' :src='item.headimgurl'></div>
                     <div class='Chat__item--content'>
                         <span class='Chat__item--name'> {{ item.username }}：</span>
                         <span class='Chat__item--text' :class='{ "is-highlight": isHighlight(item.role) }'>{{ item.content }}</span>
@@ -11,7 +11,6 @@
                 </div>
             </div>
         </div>
-
         <footer class='Chat__footer u-flex-bc'>
             <div class='Chat__footer--left'><img class='Chat__footer--img' :src='avatar'></div>
             <el-input class='Chat__footer--input' autofocus v-model='text' @focus='scrollToBottom' @keyup.enter.native='send' :placeholder='isDisable ? disableText : "发送祝福，竞猜大奖~(｡･ω･｡)~"' clearable :disabled='isDisable'></el-input>
@@ -20,20 +19,46 @@
     </div>
 </template>
 <script>
-// 示例微信头像
-const avatar = require('@/assets/wx.jpg')
+
+/**
+ * @func
+ * @desc - 从url地址中根据参数获取指定的值
+ * @param {string} name - 参数
+ * @param {string} url - url
+ */
+var getUrlParam = function(name, url) {
+    if (!url) url = location.href;
+    var paraString = url.substring(url.indexOf("?") + 1, url.length).split("&");
+    var returnValue;
+    for (var i = 0; i < paraString.length; i++) {
+        var tempParas = paraString[i].split('=')[0];
+        var parasValue = paraString[i].split('=')[1];
+        if (tempParas === name)
+            returnValue = parasValue;
+    }
+    if (!returnValue) {
+        return "";
+    } else {
+        if (returnValue.indexOf("#") != -1) {
+            returnValue = returnValue.split("#")[0];
+        }
+        return returnValue;
+    }
+}
 
 export default {
     name: 'Chat',
     data() {
         return {
             text: '',
-            avatar: avatar,
+            avatar: null,
             items: [],
             isDisable: false,
             disableText: '',
             isFirst: true,
             isCommit: false,
+            name: '',
+            openid: null,
         }
     },
     methods: {
@@ -47,81 +72,95 @@ export default {
 
         },
         async scrollToBottom() {
-          setTimeout(() => window.scrollTo(0, document.querySelector('.Chat__main').scrollHeight), 50);
+            setTimeout(() => window.scrollTo(0, document.querySelector('.Chat__main').scrollHeight), 50);
         },
         send() {
-          let params = JSON.stringify({ userName: '李钊鸿', content: this.text.trim(), isShow: true })
-           $.ajax({
-               url: 'http://47.107.160.191:3078/nhcapi/addComment',
-               // url: 'http://47.107.160.191:3078/api/addComment',
-               contentType: 'application/json; charset=utf-8',
-               method: 'POST',
-               data: params,
-               success: msg => {
-                  console.log('send', msg)
-                  this.isCommit = true
-                  this.disable(5)
-               }
-           })
+            let params = JSON.stringify({ userName: this.name, content: this.text.trim(), isShow: true, openid: this.openid })
+            $.ajax({
+                url: 'http://47.107.160.191:3078/nhcapi/addComment',
+                contentType: 'application/json; charset=utf-8',
+                method: 'POST',
+                data: params,
+                success: msg => {
+                    console.log('send', msg)
+                    this.isCommit = true
+                    this.disable(5)
+                }
+            })
         },
         disable(n) {
-          // 清空文本
-          this.text = ''
-          if (n === 0) {
-            this.isDisable = false
-            this.disableText = ''
-          } else {
-            this.isDisable = true
-            this.disableText = `请稍等 ${n} 秒～(￣▽￣～)`  
-            setTimeout(() => this.disable(--n), 1000);
-          }
+            // 清空文本
+            this.text = ''
+            if (n === 0) {
+                this.isDisable = false
+                this.disableText = ''
+            } else {
+                this.isDisable = true
+                this.disableText = `请稍等 ${n} 秒～(￣▽￣～)`
+                setTimeout(() => this.disable(--n), 1000);
+            }
+        },
+        getUserInfo() {
+            this.openid = getUrlParam('openid')
+            
+            console.log('openid', this.openid)
+
+            $.ajax({
+                url: "http://47.107.160.191:3078/nhcapi/userInfo",
+                method: "post",
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify({ openid: this.openid }),
+                success: result => {
+                    const { headimgurl, nickname } = result.data
+                    console.log('获取微信信息', headimgurl, nickname)
+                    this.avatar = headimgurl
+                    this.name = nickname
+                }
+            })
         }
     },
-    components: {
-
-    },
-    computed: {
-
-    },
-    watch: {
-
-    },
     beforeMount() {
+        this.getUserInfo()
+
         const ws = new WebSocket('ws://47.107.160.191:7878')
 
         ws.onopen = (...args) => console.log('消息通道打开了', args)
         ws.onclose = e => console.log('WebSocket onclose')
         ws.onerror = e => console.log('WebSocket onclose')
         ws.onmessage = e => {
-          
-          console.log('您有新的消息:', e)
 
-          // 获取消息列表
-          let data  = JSON.parse(e.data)
-          // 数据清洗
-          this.items = data.filter(_ => {
-              /* （可选）数据过滤 */
-              return _
-          }).map(_ => {
-              /* (可选)数据清洗 */
+            console.log('您有新的消息:', e)
 
-              // 返回最终数据
-              return Object.assign({}, _ ,{ avatar })
-          })
+            // 获取消息列表
+            let data = JSON.parse(e.data)
 
-          // 第一次的时候，需要 this.scrollToBottom()
-          if (this.isFirst) {
-            this.isFirst = false
-            this.scrollToBottom()
-          }
+            // 数据清洗
+            // this.items = data.filter(_ => {
+            //     /* （可选）数据过滤 */
+            //     return _
+            // }).map(_ => {
+            //     /* (可选)数据清洗 */
 
-          // 自己发送的以后的接受时，需要调用 this.scrollToBottom()
-          if (this.isCommit) {
-            this.isCommit = false
-            this.scrollToBottom()
-          }
+            //     // 返回最终数据
+            //     return Object.assign({}, _, { avatar })
+            // })
 
-          console.log('消息队列', this.items)
+            this.items.push(...data)
+
+
+            // 第一次的时候，需要 this.scrollToBottom()
+            if (this.isFirst) {
+                this.isFirst = false
+                this.scrollToBottom()
+            }
+
+            // 自己发送的以后的接受时，需要调用 this.scrollToBottom()
+            if (this.isCommit) {
+                this.isCommit = false
+                this.scrollToBottom()
+            }
+
+            console.log('消息队列', this.items)
         }
     }
 }
