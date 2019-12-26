@@ -5,7 +5,7 @@
                 <div class='Chat__item' v-for='(item, index) in items' :key='index'>
                     <div class='Chat__item--avatar' :class='{ "is-boss": isHighlight(item.role) }'><img class='Chat__item--img' :src='item.headimgurl'></div>
                     <div class='Chat__item--content'>
-                        <span class='Chat__item--name'> {{ item.username }}：</span>
+                        <span class='Chat__item--name'> {{ item.userName }}：</span>
                         <span class='Chat__item--text' :class='{ "is-highlight": isHighlight(item.role) }'>{{ item.content }}</span>
                     </div>
                 </div>
@@ -14,7 +14,17 @@
         <footer class='Chat__footer u-flex-bc'>
             <div class='Chat__footer--left'><img class='Chat__footer--img' :src='avatar'></div>
             <el-input class='Chat__footer--input' autofocus v-model='text' @focus='scrollToBottom' @keyup.enter.native='send' :placeholder='isDisable ? disableText : "发送祝福，竞猜大奖~(｡･ω･｡)~"' clearable :disabled='isDisable'></el-input>
-            <div class='Chat__footer--right' @click='face'></div>
+            <el-popover
+              class='Chat__footer--rightWrapper'
+              placement="top"
+              title=""
+              width="100%"
+              trigger="click">
+                <div class='face'>
+                    <div class="face__item" v-for='(item, index) in faces' :key='index' @click='setFace(item)'>{{ item }}</div>
+                </div>
+                <div class='Chat__footer--right' slot="reference" @click="face"></div>
+            </el-popover>
         </footer>
     </div>
 </template>
@@ -59,6 +69,7 @@ export default {
             isCommit: false,
             name: '',
             openid: null,
+            faces: ['（⌒▽⌒）', '（￣▽￣）', '(=・ω・=)', '(｀・ω・´)', '(〜￣△￣)〜', '(･∀･)', '(°∀°)ﾉ', '(￣3￣)', '╮(￣▽￣)╭', '( ´_ゝ｀)', '→_→', '←_←', '(;¬_¬)', '(ﾟДﾟ≡ﾟдﾟ)!?', 'Σ(ﾟдﾟ;)', 'Σ( ￣□￣||)<', '(´；ω；`)', '（/TДT)/', '(^・ω・^ )', '(｡･ω･｡)', '(●￣(ｴ)￣●)', 'ε=ε=(ノ≧∇≦)ノ', '(´･_･`)', '(-_-#)', '（￣へ￣）', '(￣ε(#￣) Σ', 'ヽ(`Д´)ﾉ', '(╯°口°)╯(┴—┴',],
         }
     },
     methods: {
@@ -69,7 +80,7 @@ export default {
             document.querySelector('.Chat__footer--input').blur()
         },
         face() {
-
+            document.querySelector('input').focus()
         },
         async scrollToBottom() {
             setTimeout(() => window.scrollTo(0, document.querySelector('.Chat__main').scrollHeight), 50);
@@ -87,6 +98,9 @@ export default {
                     this.disable(5)
                 }
             })
+        },
+        setFace(face) {
+            this.text += face
         },
         disable(n) {
             // 清空文本
@@ -298,6 +312,11 @@ export default {
     }
 }
 
+.Chat__footer--rightWrapper {
+    width: rem(64);
+    height: rem(64);
+}
+
 .Chat__footer--right {
     @include bg(rem(64), rem(64), '~@/assets/btn_emoji.png') padding: rem(35);
 }
@@ -307,5 +326,14 @@ export default {
     background-image: linear-gradient(to right, rgb(255, 83, 253) 0px, rgb(251, 240, 118) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+}
+
+.face {
+    display: flex;justify-content: flex-start;flex-wrap: wrap;
+}
+
+.face__item {
+    margin: rem(30) rem(30) 0;
+    color: #757575;
 }
 </style>
