@@ -42,7 +42,7 @@ export default {
             const now = Date.now()
 
             // 只取最近一分钟之内的。
-            const _newList = newList.filter(_ => now - new Date(_.createTime) <= 600 * 1000)
+            const _newList = newList.filter(_ => now - new Date(_.createTime) <= 60 * 1000)
 
             // 开始发送
             _newList.forEach(item => $('body').barrager({ space: 10, 'img': avatar, 'info': item.content }))            

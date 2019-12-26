@@ -52,7 +52,8 @@ export default {
         send() {
           let params = JSON.stringify({ userName: '李钊鸿', content: this.text.trim(), isShow: true })
            $.ajax({
-               url: 'http://47.107.160.191:3078/api/addComment',
+               url: 'http://47.107.160.191:3078/nhcapi/addComment',
+               // url: 'http://47.107.160.191:3078/api/addComment',
                contentType: 'application/json; charset=utf-8',
                method: 'POST',
                data: params,
@@ -87,10 +88,14 @@ export default {
     },
     beforeMount() {
         const ws = new WebSocket('ws://47.107.160.191:7878')
-        ws.onopen  = e => console.log('WebSocket onopen')
+
+        ws.onopen = (...args) => console.log('消息通道打开了', args)
         ws.onclose = e => console.log('WebSocket onclose')
         ws.onerror = e => console.log('WebSocket onclose')
         ws.onmessage = e => {
+          
+          console.log('您有新的消息:', e)
+
           // 获取消息列表
           let data  = JSON.parse(e.data)
           // 数据清洗
@@ -146,6 +151,7 @@ export default {
 .Chat__item {
     @include flex(s, s);
     margin-bottom: rem(50);
+    word-break: break-all;
 
     .Chat__item--avatar {
         position: relative;

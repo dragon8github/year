@@ -3,7 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import Fastclick from 'fastclick'
 import vueWaves from './directive/waves/waves'
 import { maybe } from './utils/utils'
 import ElementUI from 'element-ui'
@@ -13,9 +12,6 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.use(ElementUI)
 Vue.use(vueWaves)
-
-// 加载第三方【快速点击】插件
-Fastclick.attach(document.body)
 
 
 Vue.mixin({
