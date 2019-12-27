@@ -24,7 +24,6 @@ export default {
         ws.onclose = e => console.log('WebSocket onclose')
         ws.onerror = e => console.log('WebSocket onclose')
         ws.onmessage = e => {
-
           // 获取消息列表
           let data  = JSON.parse(e.data)
 
@@ -38,8 +37,6 @@ export default {
 
             // 只取最近一分钟之内的。
             const _newList = data.filter(_ => now - new Date(_.createTime) <= 60 * 1000).slice(-100)
-
-
 
             // 开始发送
             _newList.forEach(item => $('body').barrager({ space: 10, 'img': item.headimgurl, 'info': `${item.userName}: ${item.content}` }))

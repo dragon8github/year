@@ -148,24 +148,11 @@ export default {
 
             // 获取消息列表
             let data = JSON.parse(e.data).slice(-100)
-
-            // 数据清洗
-            // this.items = data.filter(_ => {
-            //     /* （可选）数据过滤 */
-            //     return _
-            // }).map(_ => {
-            //     /* (可选)数据清洗 */
-
-            //     // 返回最终数据
-            //     return Object.assign({}, _, { avatar })
-            // })
-
             // 插入
             this.items.push(...data)
 
             // 只取最后100条记录
-            this.items.slice(-100)
-
+            this.items = this.items.slice(-100)
 
             // 第一次的时候，需要 this.scrollToBottom()
             if (this.isFirst) {
