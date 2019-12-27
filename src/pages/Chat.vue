@@ -147,7 +147,7 @@ export default {
             console.log('您有新的消息:', e)
 
             // 获取消息列表
-            let data = JSON.parse(e.data)
+            let data = JSON.parse(e.data).slice(-100)
 
             // 数据清洗
             // this.items = data.filter(_ => {
@@ -160,7 +160,11 @@ export default {
             //     return Object.assign({}, _, { avatar })
             // })
 
+            // 插入
             this.items.push(...data)
+
+            // 只取最后100条记录
+            this.items.slice(-100)
 
 
             // 第一次的时候，需要 this.scrollToBottom()

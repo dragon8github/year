@@ -28,13 +28,18 @@ export default {
           // 获取消息列表
           let data  = JSON.parse(e.data)
 
+          // 弹幕的数量
+          const size = document.querySelectorAll('.barrage_box').length
+
           // 如果长度健康的话
-          if (data.length) {
+          if (data.length && size < 100) {
             // 获取当前时间
             const now = Date.now()
 
             // 只取最近一分钟之内的。
-            const _newList = data.filter(_ => now - new Date(_.createTime) <= 60 * 1000)
+            const _newList = data.filter(_ => now - new Date(_.createTime) <= 60 * 1000).slice(-100)
+
+
 
             // 开始发送
             _newList.forEach(item => $('body').barrager({ space: 10, 'img': item.headimgurl, 'info': `${item.userName}: ${item.content}` }))
