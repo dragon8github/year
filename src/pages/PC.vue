@@ -24,28 +24,20 @@ export default {
         ws.onclose = e => console.log('WebSocket onclose')
         ws.onerror = e => console.log('WebSocket onclose')
         ws.onmessage = e => {
+
           // 获取消息列表
           let data  = JSON.parse(e.data)
 
-          // 找出新长度
-          const len = data.length - this.items.length
-
-          // 先赋值
-          this.items = data
-
           // 如果长度健康的话
-          if (len) {
-            // 往后取n个
-            const newList = this.items.slice(-len)
-
+          if (data.length) {
             // 获取当前时间
             const now = Date.now()
 
             // 只取最近一分钟之内的。
-            const _newList = newList.filter(_ => now - new Date(_.createTime) <= 60 * 1000)
+            const _newList = data.filter(_ => now - new Date(_.createTime) <= 60 * 1000)
 
             // 开始发送
-            _newList.forEach(item => $('body').barrager({ space: 10, 'img': avatar, 'info': item.content }))            
+            _newList.forEach(item => $('body').barrager({ space: 10, 'img': avatar, 'info': item.content }))
           }
         }
     },
