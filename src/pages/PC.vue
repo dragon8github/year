@@ -37,7 +37,7 @@ export default {
             const _newList = data.filter(_ => now - new Date(_.createTime) <= 60 * 1000)
 
             // 开始发送
-            _newList.forEach(item => $('body').barrager({ space: 10, 'img': avatar, 'info': item.content }))
+            _newList.forEach(item => $('body').barrager({ space: 10, 'img': item.headimgurl, 'info': `${item.userName}: ${item.content}` }))
           }
         }
     },

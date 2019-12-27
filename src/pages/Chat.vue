@@ -12,8 +12,7 @@
             </div>
         </div>
         <footer class='Chat__footer u-flex-bc'>
-            <div class='Chat__footer--left'><img class='Chat__footer--img' :src='avatar'></div>
-            <el-input class='Chat__footer--input' autofocus v-model='text' @focus='scrollToBottom' @keyup.enter.native='send' :placeholder='isDisable ? disableText : "发送祝福，竞猜大奖~(｡･ω･｡)~"' clearable :disabled='isDisable'></el-input>
+            <!-- <div class='Chat__footer--left'><img class='Chat__footer--img' :src='avatar'></div> -->
             <el-popover
               class='Chat__footer--rightWrapper'
               placement="top"
@@ -25,6 +24,8 @@
                 </div>
                 <div class='Chat__footer--right' slot="reference" @click="face"></div>
             </el-popover>
+            <el-input type='textarea' resize="none" class='Chat__footer--input' autofocus v-model='text' @focus='scrollToBottom' @keyup.enter.native='send' :placeholder='isDisable ? disableText : "发送祝福，竞猜大奖~(｡･ω･｡)~"' clearable :disabled='isDisable'></el-input>
+            <el-button type="success" @click='send'>发送</el-button>
         </footer>
     </div>
 </template>
@@ -86,7 +87,7 @@ export default {
             setTimeout(() => window.scrollTo(0, document.querySelector('.Chat__main').scrollHeight), 50);
         },
         send() {
-            let params = JSON.stringify({ userName: this.name, content: this.text.trim(), isShow: true, openid: this.openid })
+            let params = JSON.stringify({ userName: this.name, content: this.text.trim().substr(0, 50), isShow: true, openid: this.openid })
             $.ajax({
                 url: 'http://47.107.160.191:3078/nhcapi/addComment',
                 contentType: 'application/json; charset=utf-8',
@@ -186,6 +187,17 @@ export default {
     display: flex;
     flex-direction: column;
     position: relative;
+}
+
+/deep/ {
+    .el-button {
+        padding: 12px 10px;
+    }
+
+    .el-textarea__inner {
+        padding: 5px 4px;
+        line-height: 1.3;
+    }
 }
 
 
